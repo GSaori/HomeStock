@@ -17,11 +17,6 @@ class Producto(Base):
                 ["categorias.hogar_id", "categorias.id"],
                 name="fk_productos_categoria_hogar" #sirve para asignarle un nombre a una restricción de clave foránea (Foreign Key) dentro de la base de datos
             ),
-        UniqueConstraint(
-            "hogar_id",
-            "id",
-            name="uq_categorias_hogar_id_id"
-        ),
     ) #Llave foreana compuesta
 
     id:Mapped[uuid.UUID] = mapped_column(
