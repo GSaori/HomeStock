@@ -22,28 +22,28 @@ paths:
      requestBody:
       required: true
       content: 
-      application/json:
-       schema:
+       application/json:
+        schema:
          $ref: "#/components/schemas/CategoriaCreate"
 
      responses:
      "201":
-     description: Categoría creada correctamente
-     content:
-       application/json:
-        schema:
+      description: Categoría creada correctamente
+      content:
+        application/json:
+         schema:
          $ref: "#/components/schemas/CategoriaRead"
 
      "409":
-     description: La categoria ya existe
-     content:
+      description: La categoria ya existe
+      content:
        application/json:
         schema:
           $ref: "#/components/schemas/ErrorResponse"
 
      "404":
-     description: El hogar no existe
-     content:
+      description: El hogar no existe
+      content:
        application/json:
         schema: 
           $ref: "#/components/schemas/ErrorResponse"
@@ -56,9 +56,9 @@ paths:
             $ref: "#/components/schemas/ErrorResponse"
       
       "422":
-      description: Error de validacion
-      content:
-       application/json:
+       description: Error de validacion
+       content:
+        application/json:
         schema:
             $ref: "#/components/schemas/HTTPValidationError" 
 
@@ -71,62 +71,62 @@ components: ## Define los datos de entrada
       type: http
       scheme: bearer
 
-    CategoriaCreate:
-      type: object
-      required:
-        - nombre
-      properties:
-        nombre:
-          type: string
-          minLength: 1
-          maxLength: 100
+  CategoriaCreate:
+   type: object
+   required:
+    - nombre
+   properties:
+    nombre:
+     type: string
+     minLength: 1
+     maxLength: 100
 
-    CategoriaRead: # Define los datos de salida
-      type: object
-      required:
-        - id
-        - hogar_id
-        - nombre
-      properties:
-        id:
-          type: string
-          format: uuid
-        hogar_id:
-          type: string
-          format: uuid
-        nombre:
-          type: string
+  CategoriaRead: # Define los datos de salida
+    type: object
+    required:
+      - id
+      - hogar_id
+      - nombre
+    properties:
+      id:
+        type: string
+        format: uuid
+      hogar_id:
+        type: string
+        format: uuid
+      nombre:
+        type: string
 
-    ErrorResponse:
-      type: object
-      required:
-        - detail
-      properties:
+  ErrorResponse:
+    type: object
+    required:
+      - detail
+    properties:
        detail:
         type: string
 
-    HTTPValidationError:
-      type: object
-      required:
-        - detail
-      properties:
-       detail:
+  HTTPValidationError:
+    type: object
+    required:
+      - detail
+    properties:
+      detail:
         type: array
-      items:
+    items:
         $ref: "#/components/schemas/ValidationError"
 
-    ValidationError:
-      type: object
-      required:
-        - loc
-        - msg
-        - type
-      properties:
+  ValidationError:
+    type: object
+    required:
+      - loc
+      - msg
+      - type
+    properties:
       loc:
       type: array
-      items:
-        type: string
-      msg:
-        type: string
-      type:
-       type: string
+    items:
+      type: string
+    msg:
+      type: string
+    type:
+      type: string
