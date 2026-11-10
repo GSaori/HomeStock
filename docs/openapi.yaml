@@ -1,0 +1,132 @@
+openapi: 3.1.0
+
+info:
+  title: HomeStock API
+  version: 1.0.0
+  description: API para gestionar el inventario del hogar
+
+paths:
+ /hogares/{hogar_id}/categorias:
+   post:
+     operationId: crearCategoria
+     summary: "Crear una categoria"
+
+     parameters:
+        - name: hogar_id
+          in: path
+          required: true
+          schema:
+             type: string
+             format: uuid
+
+     requestBody:
+      required: true
+      content: 
+      application/json:
+       schema:
+         $ref: "#/components/schemas/CategoriaCreate"
+
+     responses:
+     "201":
+     description: Categoría creada correctamente
+     content:
+       application/json:
+        schema:
+         $ref: "#/components/schemas/CategoriaRead"
+
+     "409":
+     description: La categoria ya existe
+     content:
+       application/json:
+        schema:
+          $ref: "#/components/schemas/ErrorResponse"
+
+     "404":
+     description: El hogar no existe
+     content:
+       application/json:
+        schema: 
+          $ref: "#/components/schemas/ErrorResponse"
+      
+     "401":
+      description: Error de autenticacion
+      content:
+       application/json:
+        schema:
+            $ref: "#/components/schemas/ErrorResponse"
+      
+      "422":
+      description: Error de validacion
+      content:
+       application/json:
+        schema:
+            $ref: "#/components/schemas/HTTPValidationError" 
+
+
+
+components: ## Define los datos de entrada
+  schemas:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+    CategoriaCreate:
+      type: object
+      required:
+        - nombre
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+
+    CategoriaRead: # Define los datos de salida
+      type: object
+      required:
+        - id
+        - hogar_id
+        - nombre
+      properties:
+        id:
+          type: string
+          format: uuid
+        hogar_id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required:
+        - detail
+      properties:
+       detail:
+        type: string
+
+    HTTPValidationError:
+      type: object
+      required:
+        - detail
+      properties:
+       detail:
+        type: array
+      items:
+        $ref: "#/components/schemas/ValidationError"
+
+    ValidationError:
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      properties:
+      loc:
+      type: array
+      items:
+        type: string
+      msg:
+        type: string
+      type:
+       type: string
