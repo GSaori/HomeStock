@@ -27,61 +27,61 @@ paths:
          $ref: "#/components/schemas/CategoriaCreate"
 
      responses:
-     "201":
-      description: Categoría creada correctamente
-      content:
-        application/json:
-         schema:
-         $ref: "#/components/schemas/CategoriaRead"
+      "201":
+          description: Categoría creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoriaRead"
 
-     "409":
-      description: La categoria ya existe
-      content:
-       application/json:
-        schema:
-          $ref: "#/components/schemas/ErrorResponse"
+      "401":
+        description: Error de autenticación
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
 
-     "404":
-      description: El hogar no existe
-      content:
-       application/json:
-        schema: 
-          $ref: "#/components/schemas/ErrorResponse"
-      
-     "401":
-      description: Error de autenticacion
-      content:
-       application/json:
-        schema:
-            $ref: "#/components/schemas/ErrorResponse"
-      
+      "403":
+        description: No tiene autorización para crear categorías
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
+
+      "404":
+        description: El hogar no existe
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
+
+      "409":
+        description: La categoría ya existe
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ErrorResponse"
+
       "422":
-       description: Error de validacion
-       content:
-        application/json:
-        schema:
-            $ref: "#/components/schemas/HTTPValidationError" 
-
-
+        description: Error de validación de los datos enviados
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HTTPValidationError"
 
 components: ## Define los datos de entrada
   schemas:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
+   CategoriaCreate:
+    type: object
+    required:
+     - nombre
+    properties:
+     nombre:
+      type: string
+      minLength: 1
+      maxLength: 100
 
-  CategoriaCreate:
-   type: object
-   required:
-    - nombre
-   properties:
-    nombre:
-     type: string
-     minLength: 1
-     maxLength: 100
-
-  CategoriaRead: # Define los datos de salida
+   CategoriaRead: # Define los datos de salida
     type: object
     required:
       - id
@@ -97,7 +97,7 @@ components: ## Define los datos de entrada
       nombre:
         type: string
 
-  ErrorResponse:
+   ErrorResponse:
     type: object
     required:
       - detail
@@ -105,17 +105,17 @@ components: ## Define los datos de entrada
        detail:
         type: string
 
-  HTTPValidationError:
+   HTTPValidationError:
     type: object
     required:
       - detail
     properties:
-      detail:
-        type: array
-    items:
+     detail:
+      type: array
+      items:
         $ref: "#/components/schemas/ValidationError"
 
-  ValidationError:
+   ValidationError:
     type: object
     required:
       - loc
@@ -123,10 +123,17 @@ components: ## Define los datos de entrada
       - type
     properties:
       loc:
-      type: array
-    items:
-      type: string
-    msg:
-      type: string
-    type:
-      type: string
+        type: array
+        items:
+          oneOf:
+            - type: string
+            - type: integer
+      msg:
+        type: string
+      type:
+        type: string
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
